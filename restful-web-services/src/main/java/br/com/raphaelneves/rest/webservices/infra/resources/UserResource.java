@@ -4,6 +4,10 @@ import br.com.raphaelneves.rest.webservices.domain.beans.User;
 import br.com.raphaelneves.rest.webservices.domain.services.UserService;
 import br.com.raphaelneves.rest.webservices.infra.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +30,15 @@ public class UserResource {
     }
 
     @GetMapping(value = "/{id}")
-    public User findOneById(@PathVariable Long id){
+    public Resource<User> findOneById(@PathVariable Long id){
         User foundUser = service.findOne(id);
         if(Objects.isNull(foundUser))
             throw new NotFoundException("id: " + id);
-        return foundUser;
+
+        Resource<User> resource = new Resource<>(foundUser);
+        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).findAll());
+        resource.add(linkTo.withRel("all-users"));
+        return resource;
     }
 
     @GetMapping(value = "")
