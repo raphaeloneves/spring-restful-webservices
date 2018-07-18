@@ -8,8 +8,9 @@ import java.util.Objects;
 public class User implements Serializable {
 
     private Long id;
-    @NotNull(message = "Name must not be null")
+    @NotNull(message = "validation.error.not-null")
     private String name;
+
     private Date birthDate;
 
     public User(Long id, String name, Date birthDate) {
