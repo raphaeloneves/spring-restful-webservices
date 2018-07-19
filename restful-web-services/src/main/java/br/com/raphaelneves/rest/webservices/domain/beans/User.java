@@ -3,18 +3,30 @@ package br.com.raphaelneves.rest.webservices.domain.beans;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
+@Entity
 public class User implements Serializable {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @Column
     @NotNull(message = "validation.error.not-null")
     private String name;
 
+    @Column
     private Date birthDate;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Post> posts;
 
     public User(Long id, String name, Date birthDate) {
         this.id = id;
